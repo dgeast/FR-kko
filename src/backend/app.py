@@ -195,9 +195,12 @@ async def recognize_face(file: UploadFile = File(...)):
         # 얼굴 인식
         results = face_engine.recognize_faces_in_image(image)
         
+        # 등록된 사용자만 필터링
+        recognized_faces = [r for r in results if r.get("user_id") is not None]
+        
         return {
-            "recognized": len(results) > 0,
-            "count": len(results),
+            "recognized": len(recognized_faces) > 0,
+            "count": len(results),  # 전체 감지된 얼굴 수
             "faces": [
                 {
                     "user_id": r["user_id"],
@@ -205,7 +208,7 @@ async def recognize_face(file: UploadFile = File(...)):
                     "confidence": r["confidence"],
                     "location": r["location"]
                 }
-                for r in results
+                for r in recognized_faces
             ]
         }
     except HTTPException:

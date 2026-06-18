@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Home from './components/Home';
 import RegisterUser from './components/RegisterUser';
 import FaceCapture from './components/FaceCapture';
+import FaceRegisterCapture from './components/FaceRegisterCapture';
 import Chat from './components/Chat';
 import UserList from './components/UserList';
 import Settings from './components/Settings';
@@ -22,7 +23,11 @@ function App() {
 
   const handleRegisterSuccess = (userId, userName) => {
     setCurrentUser({ userId, userName });
-    setScreen('chat');
+    setScreen('face-register'); // 이름 등록 후 얼굴 촬영 화면으로 이동
+  };
+
+  const handleFaceRegisterSuccess = (userId, userName) => {
+    setScreen('chat'); // 얼굴 촬영 후 대화 화면으로 이동
   };
 
   const handleRecognizeSuccess = (userId, userName) => {
@@ -57,6 +62,16 @@ function App() {
           <RegisterUser
             onSuccess={handleRegisterSuccess}
             onBack={handleBack}
+            backendUrl={backendUrl}
+          />
+        )}
+
+        {screen === 'face-register' && currentUser && (
+          <FaceRegisterCapture
+            userId={currentUser.userId}
+            userName={currentUser.userName}
+            onSuccess={handleFaceRegisterSuccess}
+            onBack={() => setScreen('chat')} // 건너뛰기 시 바로 채팅으로
             backendUrl={backendUrl}
           />
         )}

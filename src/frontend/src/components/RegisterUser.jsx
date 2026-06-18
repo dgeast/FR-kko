@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
+import { registerUser } from '../db/localDatabase';
 
-function RegisterUser({ onSuccess, onBack, backendUrl }) {
+function RegisterUser({ onSuccess, onBack }) {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -16,11 +17,13 @@ function RegisterUser({ onSuccess, onBack, backendUrl }) {
     setError('');
 
     try {
-      const response = await axios.post(`${backendUrl}/api/users/register`, { name });
+      const userId = uuidv4();
+      await registerUser({ userId, name });
+      
       alert(`${name}님이 등록되었습니다! 이제 얼굴을 등록하세요.`);
-      onSuccess(response.data.user_id, response.data.name);
+      onSuccess(userId, name);
     } catch (err) {
-      setError(err.response?.data?.detail || '등록 실패. 다시 시도해주세요.');
+      setError('등록 실패: ' + err.message);
     } finally {
       setLoading(false);
     }

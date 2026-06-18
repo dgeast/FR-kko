@@ -25,21 +25,25 @@ function Chat({ user, onBack, backendUrl }) {
     setMessages(prev => [...prev, { role: 'user', content: userMsg }]);
     setLoading(true);
 
-    try {
-      const response = await axios.post(`${backendUrl}/api/chat`, {
-        user_id: user.userId,
-        message: userMsg
-      });
+    // 오프라인 로컬 응답 시뮬레이션
+    setTimeout(() => {
+      let aiResponse = "어떤 말씀이신지 잘 모르겠어요. 다시 말씀해 주시겠어요?";
+      if (userMsg.includes("안녕")) {
+        aiResponse = `안녕하세요 ${user.userName}님! 오늘 하루 어떠신가요?`;
+      } else if (userMsg.includes("날씨")) {
+        aiResponse = "태블릿 오프라인 모드에서는 날씨 정보를 알 수 없어요.";
+      } else if (userMsg.includes("이름")) {
+        aiResponse = `제 이름은 하모니스 오프라인 AI입니다. 사용자님은 ${user.userName}님이시군요!`;
+      } else if (userMsg.length > 5) {
+        aiResponse = "흥미로운 이야기네요. 더 자세히 말씀해 주실 수 있나요?";
+      }
 
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: response.data.ai_response
+        content: aiResponse
       }]);
-    } catch (err) {
-      alert('메시지 전송 실패: ' + err.message);
-    } finally {
       setLoading(false);
-    }
+    }, 800); // 0.8초 딜레이
   };
 
   return (
