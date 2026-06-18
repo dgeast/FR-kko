@@ -1,0 +1,11 @@
+{
+  "files": {
+    "main.css": "/FR-kko/static/css/main.1fc01e4c.css",
+    "main.js": "/FR-kko/static/js/main.1adab0e1.js",
+    "index.html": "/FR-kko/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.1fc01e4c.css",
+    "static/js/main.1adab0e1.js"
+  ]
+}
